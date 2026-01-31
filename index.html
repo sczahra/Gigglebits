@@ -6,114 +6,163 @@
 <title>Gigglebits</title>
 <link rel="manifest" href="manifest.webmanifest">
 <style>
-:root {
-  --bg:#0b2b1a;
-  --accent:#6cffb0;
+html,body{
+  margin:0;height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
+  background:#10291c;
+  color:#e6ffe9;
 }
-html,body {
-  margin:0;
-  height:100%;
-  background:var(--bg);
-  font-family:-apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-  color:#b6ffd9;
+#top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;letter-spacing:2px;
 }
-#top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 16px;
-  letter-spacing:2px;
+#gear{cursor:pointer}
+#scene{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 70% 30%, #ffe8a3 0%, transparent 40%),
+    linear-gradient(#1b3a2a,#0e2218);
 }
-#pal {
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
+#pal{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
 }
-.character {
-  width:140px;
-  height:140px;
+.cat{
+  width:180px;height:140px;
   position:relative;
 }
-.eye {
-  width:14px;height:14px;border-radius:50%;
-  background:#000;
-  position:absolute;top:40px;
+.body{
+  position:absolute;bottom:0;left:20px;
+  width:140px;height:80px;
+  background:#f7f7f5;
+  border-radius:60px;
 }
-.blink {
-  animation:blink 6s infinite;
-}
-@keyframes blink {
-  0%,92%,100%{transform:scaleY(1)}
-  94%,96%{transform:scaleY(0.1)}
-}
-.body {
-  width:100%;height:100%;
-  border-radius:20px;
-  background:#6cffb0;
-}
-.sleep {
-  opacity:.6;
-}
-#chat {
-  position:fixed;
-  bottom:16px;
-  left:16px;right:16px;
-  display:flex;
-  gap:10px;
-}
-input {
-  flex:1;
-  background:#0e3a25;
-  border:1px solid #3a7;
-  border-radius:12px;
-  padding:12px;
-  color:#b6ffd9;
-}
-button {
-  background:#1f5;
-  border:none;
+.head{
+  position:absolute;top:0;left:60px;
+  width:80px;height:70px;
+  background:#f7f7f5;
   border-radius:50%;
-  width:44px;
-  height:44px;
+}
+.ear{
+  position:absolute;top:-10px;width:20px;height:30px;
+  background:#f7f7f5;border-radius:50% 50% 0 0;
+}
+.ear.left{left:65px}
+.ear.right{left:115px}
+.patch{
+  position:absolute;top:5px;left:95px;
+  width:20px;height:18px;
+  background:#ccc;border-radius:50%;
+}
+.eye{
+  position:absolute;top:30px;width:10px;height:10px;border-radius:50%;
+}
+.eye.blue{left:80px;background:#6bbcff}
+.eye.green{left:105px;background:#6bff9e}
+.tail{
+  position:absolute;left:0;bottom:20px;
+  width:60px;height:20px;
+  background:#f7f7f5;border-radius:20px;
+}
+.sleep .eye{height:2px;top:35px}
+.sleep .cat{opacity:.85}
+#bubble{
+  position:absolute;bottom:220px;
+  background:#1b3a2a;padding:10px 14px;
+  border-radius:14px;display:none;
+}
+#chat{
+  position:fixed;bottom:16px;left:16px;right:16px;
+  display:flex;gap:10px;
+}
+input{
+  flex:1;background:#143526;border:1px solid #3a7;
+  border-radius:12px;padding:12px;color:#e6ffe9;
+}
+button{
+  background:#4cff9e;border:none;border-radius:50%;
+  width:44px;height:44px;
+}
+#settings{
+  position:fixed;inset:0;background:rgba(0,0,0,.6);
+  display:none;align-items:center;justify-content:center;
+}
+.panel{
+  background:#143526;padding:20px;border-radius:16px;
 }
 </style>
 </head>
 <body>
+<div id="scene"></div>
+
 <div id="top">
   <div><strong>GIGGLEBITS</strong> <small>offline pal</small></div>
-  <div>⚙️</div>
+  <div id="gear">⚙️</div>
 </div>
 
 <div id="pal">
-  <div class="character" id="char">
+  <div id="bubble">😺</div>
+  <div class="cat" id="cat">
+    <div class="tail"></div>
     <div class="body"></div>
-    <div class="eye blink" style="left:40px"></div>
-    <div class="eye blink" style="right:40px"></div>
+    <div class="head"></div>
+    <div class="ear left"></div>
+    <div class="ear right"></div>
+    <div class="patch"></div>
+    <div class="eye blue"></div>
+    <div class="eye green"></div>
   </div>
 </div>
 
 <div id="chat">
-  <input placeholder="Type something…"/>
-  <button>▶</button>
+  <input id="input" placeholder="Type something…"/>
+  <button id="send">▶</button>
+</div>
+
+<div id="settings">
+  <div class="panel">
+    <p><strong>Settings</strong></p>
+    <button onclick="closeSettings()">Close</button>
+  </div>
 </div>
 
 <script>
-let idleTimer;
+let sleepTimer;
+const cat=document.getElementById("cat");
+const bubble=document.getElementById("bubble");
+
 function sleep(){
-  document.getElementById("char").classList.add("sleep");
+  cat.classList.add("sleep");
 }
 function wake(){
-  document.getElementById("char").classList.remove("sleep");
+  cat.classList.remove("sleep");
 }
 function resetIdle(){
   wake();
-  clearTimeout(idleTimer);
-  idleTimer=setTimeout(sleep,8000);
+  clearTimeout(sleepTimer);
+  sleepTimer=setTimeout(sleep,7000);
 }
-document.addEventListener("keydown",resetIdle);
+cat.addEventListener("click",()=>{
+  wake(); bubble.textContent="😽"; bubble.style.display="block";
+  setTimeout(()=>bubble.style.display="none",1200);
+  resetIdle();
+});
+document.getElementById("send").onclick=send;
+document.getElementById("input").addEventListener("keydown",e=>{
+  if(e.key==="Enter")send();
+});
+function send(){
+  bubble.textContent="💬";
+  bubble.style.display="block";
+  setTimeout(()=>bubble.style.display="none",1200);
+  resetIdle();
+}
+function closeSettings(){
+  document.getElementById("settings").style.display="none";
+}
+document.getElementById("gear").onclick=()=>{
+  document.getElementById("settings").style.display="flex";
+};
 resetIdle();
 </script>
 </body>
