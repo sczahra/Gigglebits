@@ -1,5 +1,5 @@
 /* Gigglebits PWA service worker (offline-first, simple) */
-const CACHE_NAME = "gigglebits-v1";
+const CACHE_NAME = "gigglebits-v2";
 const ASSETS = [
   "./",
   "./index.html",

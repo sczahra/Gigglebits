@@ -64,13 +64,13 @@
     /* Background “locations” */
     body[data-bg="desk"]{
       background:
-        radial-gradient(900px 520px at 70% 15%, color-mix(in srgb, var(--bg1) 85%, black), var(--bg0)),
-        linear-gradient(180deg, color-mix(in srgb, var(--bg0) 70%, black), var(--bg0));
+        radial-gradient(900px 520px at 70% 15%, var(--bg1) 85%, black), var(--bg0)),
+        linear-gradient(180deg, var(--bg0) 70%, black), var(--bg0));
     }
     body[data-bg="cozy"]{
       background:
-        radial-gradient(1000px 600px at 35% 25%, color-mix(in srgb, var(--accent2) 12%, var(--bg1)), var(--bg0)),
-        linear-gradient(180deg, color-mix(in srgb, var(--bg1) 65%, #1b0b07), var(--bg0));
+        radial-gradient(1000px 600px at 35% 25%, var(--accent2) 12%, var(--bg1)), var(--bg0)),
+        linear-gradient(180deg, var(--bg1) 65%, #1b0b07), var(--bg0));
     }
     body[data-bg="minimal"]{
       background: linear-gradient(135deg, var(--bg1), var(--bg0));
@@ -137,7 +137,7 @@
       font-size: 16px; margin:0;
       letter-spacing:.10em;
       text-transform: uppercase;
-      color: color-mix(in srgb, var(--text) 90%, var(--muted));
+      color: var(--text) 90%, var(--muted));
     }
     #status{
       font-size: 12px;
@@ -147,8 +147,8 @@
 
     .btn{
       appearance:none;
-      border:1px solid color-mix(in srgb, var(--accent) 35%, transparent);
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      border:1px solid var(--accent) 35%, transparent);
+      background: currentColor 70%, transparent);
       color:var(--text);
       border-radius: 12px;
       padding: 10px 12px;
@@ -193,7 +193,7 @@
       max-width: min(340px, 80vw);
       background: var(--bubble);
       color: var(--bubbleText);
-      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      border: 1px solid var(--accent) 25%, transparent);
       border-radius: 16px;
       padding: 10px 12px;
       font-size: 14px;
@@ -215,7 +215,7 @@
       vertical-align: -3px;
     }
     #bubble .small{
-      color: color-mix(in srgb, var(--bubbleText) 70%, var(--muted));
+      color: var(--bubbleText) 70%, var(--muted));
       font-size: 12px;
     }
 
@@ -228,8 +228,8 @@
     }
     #text{
       flex:1;
-      background: color-mix(in srgb, var(--panel2) 72%, transparent);
-      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      background: currentColor 72%, transparent);
+      border: 1px solid var(--accent) 25%, transparent);
       border-radius: 14px;
       padding: 12px 12px;
       color: var(--text);
@@ -256,7 +256,7 @@
       max-height: min(74vh, 700px);
       overflow:auto;
       background: var(--panel2);
-      border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+      border: 1px solid var(--accent) 25%, transparent);
       border-radius: 18px;
       padding: 14px;
       box-shadow: 0 22px 70px rgba(0,0,0,.55);
@@ -273,10 +273,10 @@
       font-size: 14px;
       letter-spacing:.12em;
       text-transform:uppercase;
-      color: color-mix(in srgb, var(--text) 90%, var(--muted));
+      color: var(--text) 90%, var(--muted));
     }
     .section{
-      border-top:1px solid color-mix(in srgb, var(--accent) 14%, transparent);
+      border-top:1px solid var(--accent) 14%, transparent);
       padding-top: 12px;
       margin-top: 12px;
     }
@@ -295,8 +295,8 @@
       margin: 8px 0;
     }
     .chip{
-      border:1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      border:1px solid var(--accent) 25%, transparent);
+      background: currentColor 70%, transparent);
       padding: 10px 12px;
       border-radius: 999px;
       cursor:pointer;
@@ -304,13 +304,13 @@
       font-size: 14px;
     }
     .chip[aria-pressed="true"]{
-      border-color: color-mix(in srgb, var(--accent) 70%, transparent);
-      box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 22%, transparent) inset;
+      border-color: var(--accent) 70%, transparent);
+      box-shadow: 0 0 0 2px var(--accent) 22%, transparent) inset;
     }
     label.toggle{
       display:flex; gap:10px; align-items:center;
-      border:1px solid color-mix(in srgb, var(--accent) 18%, transparent);
-      background: color-mix(in srgb, var(--panel) 70%, transparent);
+      border:1px solid var(--accent) 18%, transparent);
+      background: currentColor 70%, transparent);
       padding: 10px 12px;
       border-radius: 14px;
       user-select:none;
@@ -318,15 +318,15 @@
     }
     label.toggle input{ accent-color: var(--accent); transform: scale(1.1); }
     select{
-      background: color-mix(in srgb, var(--panel2) 72%, transparent);
-      border:1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+      background: currentColor 72%, transparent);
+      border:1px solid var(--accent) 20%, transparent);
       color: var(--text);
       padding: 10px 12px;
       border-radius: 14px;
       font-size: 14px;
       outline:none;
     }
-    .note{ font-size: 12px; color: color-mix(in srgb, var(--muted) 88%, var(--text)); opacity:.9; }
+    .note{ font-size: 12px; color: var(--muted) 88%, var(--text)); opacity:.9; }
 
     /* SVG */
     svg{ width:100%; height:100%; overflow:visible; }
@@ -606,13 +606,13 @@
     clippy: `<svg viewBox="0 0 200 200" aria-hidden="true">
 <defs>
 <linearGradient id="gBody" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="color-mix(in srgb, var(--accent) 30%, white)"/>
-<stop offset="0.45" stop-color="color-mix(in srgb, var(--accent) 30%, var(--text))"/>
-<stop offset="1" stop-color="color-mix(in srgb, var(--accent) 60%, black)"/>
+<stop offset="0" stop-color="var(--accent) 30%, white)"/>
+<stop offset="0.45" stop-color="var(--accent) 30%, var(--text))"/>
+<stop offset="1" stop-color="var(--accent) 60%, black)"/>
 </linearGradient>
 <radialGradient id="gGlow" cx="30%" cy="25%" r="70%">
-<stop offset="0" stop-color="color-mix(in srgb, var(--accent) 35%, white)" stop-opacity="0.7"/>
-<stop offset="1" stop-color="color-mix(in srgb, var(--accent) 10%, black)" stop-opacity="0"/>
+<stop offset="0" stop-color="var(--accent) 35%, white)" stop-opacity="0.7"/>
+<stop offset="1" stop-color="var(--accent) 10%, black)" stop-opacity="0"/>
 </radialGradient>
 <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
 <feGaussianBlur stdDeviation="0.45" />
@@ -631,7 +631,7 @@ C128 180 141 164 139 147
 C136 122 154 112 151 89
 C148 63 124 41 106 30
 C101 27 97 27 92 30Z"
-fill="url(#gBody)" stroke="color-mix(in srgb, var(--accent) 55%, black)" stroke-width="2.2" />
+fill="url(#gBody)" stroke="var(--accent) 55%, black)" stroke-width="2.2" />
 <!-- Inner glow -->
 <path d="M95 42
 C78 54 71 74 76 94
@@ -644,77 +644,77 @@ C104 40 99 40 95 42Z"
 fill="url(#gGlow)" filter="url(#soft)"/>
 <!-- Face plate -->
 <ellipse cx="105" cy="96" rx="42" ry="34"
-fill="color-mix(in srgb, var(--panel2) 75%, transparent)"
-stroke="color-mix(in srgb, var(--accent) 30%, transparent)"
+fill="currentColor 75%, transparent)"
+stroke="var(--accent) 30%, transparent)"
 stroke-width="1.6"/>
 <!-- Eyes (open) -->
 <g id="eyesOpen">
-<circle cx="90" cy="92" r="6" fill="color-mix(in srgb, var(--text) 90%, black)"/>
-<circle cx="122" cy="92" r="6" fill="color-mix(in srgb, var(--text) 90%, black)"/>
+<circle cx="90" cy="92" r="6" fill="var(--text) 90%, black)"/>
+<circle cx="122" cy="92" r="6" fill="var(--text) 90%, black)"/>
 <circle cx="88" cy="90" r="2" fill="white" opacity=".9"/>
 <circle cx="120" cy="90" r="2" fill="white" opacity=".9"/>
 </g>
 <!-- Eyes (closed) -->
 <g id="eyesClosed" class="blink closed">
-<path d="M82 92 Q90 97 98 92" fill="none" stroke="color-mix(in srgb, var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
-<path d="M114 92 Q122 97 130 92" fill="none" stroke="color-mix(in srgb, var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M82 92 Q90 97 98 92" fill="none" stroke="var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
+<path d="M114 92 Q122 97 130 92" fill="none" stroke="var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
 </g>
 <!-- Mouth -->
 <path id="mouth" d="M95 110 Q106 118 117 110"
-fill="none" stroke="color-mix(in srgb, var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
+fill="none" stroke="var(--text) 85%, black)" stroke-width="2.6" stroke-linecap="round"/>
 <!-- Arm-ish flourish -->
 <path d="M58 108
 C45 112 40 126 48 136
 C56 146 72 144 78 134"
-fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width="4.6" stroke-linecap="round"/>
+fill="none" stroke="var(--accent2) 55%, black)" stroke-width="4.6" stroke-linecap="round"/>
 </g>
 </svg>`,
     dachshund_awake: `
       <svg viewBox="0 0 220 160" aria-hidden="true">
         <defs>
           <linearGradient id="dogFur" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="color-mix(in srgb, var(--text) 35%, #3b3b3b)"/>
-            <stop offset="1" stop-color="color-mix(in srgb, var(--accent2) 10%, #1a1a1a)"/>
+            <stop offset="0" stop-color="var(--text) 35%, #3b3b3b)"/>
+            <stop offset="1" stop-color="var(--accent2) 10%, #1a1a1a)"/>
           </linearGradient>
           <radialGradient id="dogGlow" cx="30%" cy="25%" r="70%">
-            <stop offset="0" stop-color="color-mix(in srgb, var(--accent) 25%, white)"/>
+            <stop offset="0" stop-color="var(--accent) 25%, white)"/>
             <stop offset="1" stop-color="transparent"/>
           </radialGradient>
         </defs>
 
         <!-- shadow -->
-        <ellipse cx="112" cy="132" rx="80" ry="16" fill="color-mix(in srgb, var(--shadow) 70%, transparent)"/>
+        <ellipse cx="112" cy="132" rx="80" ry="16" fill="var(--shadow) 70%, transparent)"/>
 
         <g id="dog" class="breath">
           <!-- body -->
           <path d="M38 92 C52 66, 92 58, 128 62 C160 66, 188 78, 196 96 C200 108, 192 120, 174 122 C140 126, 94 124, 62 116 C46 112, 34 104, 38 92 Z"
-                fill="url(#dogFur)" stroke="color-mix(in srgb, var(--shadow) 40%, transparent)" stroke-width="2" />
+                fill="url(#dogFur)" stroke="var(--shadow) 40%, transparent)" stroke-width="2" />
           <!-- merle-ish speckles -->
-          <g opacity=".22" fill="color-mix(in srgb, #ffffff 40%, #000000)">
+          <g opacity=".22" fill="#ffffff">
             <circle cx="78" cy="82" r="6"/><circle cx="92" cy="76" r="4"/><circle cx="106" cy="86" r="5"/>
             <circle cx="124" cy="80" r="6"/><circle cx="140" cy="92" r="5"/><circle cx="156" cy="84" r="4"/>
           </g>
 
           <!-- chest fluff -->
           <path d="M86 110 C92 124, 110 134, 124 128 C134 124, 132 110, 118 104 C106 98, 92 100, 86 110 Z"
-                fill="color-mix(in srgb, var(--text) 55%, #ffffff)" opacity=".9"/>
+                fill="var(--text) 55%, #ffffff)" opacity=".9"/>
 
           <!-- head -->
           <g id="dogHead" class="nod">
             <path d="M54 86 C52 66, 62 52, 78 48 C96 44, 112 52, 118 68 C124 84, 114 98, 96 102 C76 106, 58 100, 54 86 Z"
-                  fill="url(#dogFur)" stroke="color-mix(in srgb, var(--shadow) 45%, transparent)" stroke-width="2"/>
+                  fill="url(#dogFur)" stroke="var(--shadow) 45%, transparent)" stroke-width="2"/>
             <!-- blaze -->
             <path d="M84 52 C74 64, 74 88, 90 96 C98 100, 106 96, 110 90 C96 78, 94 62, 102 54 C98 50, 90 48, 84 52 Z"
-                  fill="color-mix(in srgb, var(--text) 70%, #ffffff)" opacity=".95"/>
+                  fill="var(--text) 70%, #ffffff)" opacity=".95"/>
             <!-- tan cheeks -->
-            <path d="M60 78 C66 62, 82 60, 86 74 C76 86, 66 88, 60 78 Z" fill="color-mix(in srgb, #c78b4a 75%, var(--text))" opacity=".9"/>
-            <path d="M104 74 C110 60, 126 62, 130 78 C124 88, 114 86, 104 74 Z" fill="color-mix(in srgb, #c78b4a 75%, var(--text))" opacity=".9"/>
+            <path d="M60 78 C66 62, 82 60, 86 74 C76 86, 66 88, 60 78 Z" fill="var(--text))" opacity=".9"/>
+            <path d="M104 74 C110 60, 126 62, 130 78 C124 88, 114 86, 104 74 Z" fill="var(--text))" opacity=".9"/>
 
             <!-- ears -->
             <path d="M56 70 C42 72, 34 88, 46 100 C56 110, 70 102, 66 86 C64 78, 60 72, 56 70 Z"
-                  fill="color-mix(in srgb, #1f1f1f 85%, var(--accent2))" opacity=".95"/>
+                  fill="var(--accent2))" opacity=".95"/>
             <path d="M122 72 C136 76, 142 92, 130 104 C120 114, 106 104, 110 88 C112 80, 118 74, 122 72 Z"
-                  fill="color-mix(in srgb, #1f1f1f 85%, var(--accent2))" opacity=".95"/>
+                  fill="var(--accent2))" opacity=".95"/>
 
             <!-- eyes -->
             <g id="eyesOpen">
@@ -738,7 +738,7 @@ fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width=
 
           <!-- tail -->
           <path d="M192 94 C206 84, 214 92, 208 104 C202 116, 186 114, 184 104 C186 98, 188 96, 192 94 Z"
-                fill="color-mix(in srgb, #1f1f1f 80%, var(--accent2))" class="wag"/>
+                fill="var(--accent2))" class="wag"/>
 
           <!-- glow -->
           <circle cx="78" cy="56" r="68" fill="url(#dogGlow)" opacity=".45"/>
@@ -749,15 +749,15 @@ fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width=
       <svg viewBox="0 0 220 160" aria-hidden="true">
         <defs>
           <linearGradient id="dogFurS" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="color-mix(in srgb, var(--text) 35%, #3b3b3b)"/>
-            <stop offset="1" stop-color="color-mix(in srgb, var(--accent2) 10%, #1a1a1a)"/>
+            <stop offset="0" stop-color="var(--text) 35%, #3b3b3b)"/>
+            <stop offset="1" stop-color="var(--accent2) 10%, #1a1a1a)"/>
           </linearGradient>
         </defs>
-        <ellipse cx="120" cy="132" rx="70" ry="16" fill="color-mix(in srgb, var(--shadow) 70%, transparent)"/>
+        <ellipse cx="120" cy="132" rx="70" ry="16" fill="var(--shadow) 70%, transparent)"/>
         <g id="dogSleep" class="breathSlow">
           <!-- curled body -->
           <path d="M72 104 C60 78, 78 56, 110 52 C144 48, 170 66, 172 90 C174 114, 156 128, 130 130 C104 132, 84 124, 72 104 Z"
-                fill="url(#dogFurS)" stroke="color-mix(in srgb, var(--shadow) 40%, transparent)" stroke-width="2"/>
+                fill="url(#dogFurS)" stroke="var(--shadow) 40%, transparent)" stroke-width="2"/>
           <!-- head tucked -->
           <path d="M104 92 C98 74, 110 62, 126 62 C144 62, 152 78, 146 92 C140 106, 118 110, 104 92 Z"
                 fill="url(#dogFurS)" opacity=".95"/>
@@ -765,7 +765,7 @@ fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width=
           <ellipse cx="126" cy="98" rx="8" ry="5" fill="#101010" opacity=".95"/>
           <!-- tail wrap -->
           <path d="M160 92 C178 92, 186 110, 168 120 C150 130, 144 120, 150 110 C156 100, 156 94, 160 92 Z"
-                fill="color-mix(in srgb, #1f1f1f 80%, var(--accent2))" opacity=".95"/>
+                fill="var(--accent2))" opacity=".95"/>
         </g>
       </svg>
     `,
@@ -773,28 +773,28 @@ fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width=
       <svg viewBox="0 0 200 170" aria-hidden="true">
         <defs>
           <radialGradient id="catGlow" cx="30%" cy="20%" r="70%">
-            <stop offset="0" stop-color="color-mix(in srgb, var(--accent) 20%, white)"/>
+            <stop offset="0" stop-color="var(--accent) 20%, white)"/>
             <stop offset="1" stop-color="transparent"/>
           </radialGradient>
         </defs>
-        <ellipse cx="104" cy="145" rx="70" ry="14" fill="color-mix(in srgb, var(--shadow) 70%, transparent)"/>
+        <ellipse cx="104" cy="145" rx="70" ry="14" fill="var(--shadow) 70%, transparent)"/>
         <g id="cat" class="breath">
           <!-- body -->
           <path d="M60 120 C56 92, 70 72, 100 72 C132 72, 152 92, 148 120 C144 146, 124 154, 102 154 C78 154, 64 144, 60 120 Z"
-                fill="color-mix(in srgb, var(--text) 80%, #ffffff)" stroke="color-mix(in srgb, var(--shadow) 35%, transparent)" stroke-width="2"/>
+                fill="var(--text) 80%, #ffffff)" stroke="var(--shadow) 35%, transparent)" stroke-width="2"/>
           <!-- tail -->
           <path d="M146 126 C170 120, 182 132, 170 144 C160 154, 142 150, 138 140" fill="none"
-                stroke="color-mix(in srgb, var(--shadow) 55%, transparent)" stroke-width="10" stroke-linecap="round" class="tailFlick"/>
+                stroke="var(--shadow) 55%, transparent)" stroke-width="10" stroke-linecap="round" class="tailFlick"/>
           <!-- head -->
           <g id="catHead" class="nod">
             <path d="M78 86 C74 70, 82 54, 100 52 C118 50, 130 64, 128 82 C126 100, 112 110, 98 110 C84 110, 80 100, 78 86 Z"
-                  fill="color-mix(in srgb, var(--text) 86%, #ffffff)" stroke="color-mix(in srgb, var(--shadow) 35%, transparent)" stroke-width="2"/>
+                  fill="var(--text) 86%, #ffffff)" stroke="var(--shadow) 35%, transparent)" stroke-width="2"/>
             <!-- ears -->
-            <path d="M84 68 L72 56 L76 78 Z" fill="color-mix(in srgb, var(--text) 86%, #ffffff)"/>
-            <path d="M118 68 L132 56 L128 78 Z" fill="color-mix(in srgb, var(--text) 86%, #ffffff)"/>
+            <path d="M84 68 L72 56 L76 78 Z" fill="var(--text) 86%, #ffffff)"/>
+            <path d="M118 68 L132 56 L128 78 Z" fill="var(--text) 86%, #ffffff)"/>
             <!-- gray patch -->
             <path d="M92 54 C96 48, 108 48, 112 56 C106 62, 98 62, 92 54 Z"
-                  fill="color-mix(in srgb, #b5b7bd 70%, var(--text))" opacity=".85"/>
+                  fill="var(--text))" opacity=".85"/>
 
             <!-- eyes heterochromia -->
             <g id="eyesOpen">
@@ -819,22 +819,22 @@ fill="none" stroke="color-mix(in srgb, var(--accent2) 55%, black)" stroke-width=
     `,
     cat_sleep: `
       <svg viewBox="0 0 200 170" aria-hidden="true">
-        <ellipse cx="110" cy="145" rx="66" ry="14" fill="color-mix(in srgb, var(--shadow) 70%, transparent)"/>
+        <ellipse cx="110" cy="145" rx="66" ry="14" fill="var(--shadow) 70%, transparent)"/>
         <g id="catSleep" class="breathSlow">
           <!-- curled body -->
           <path d="M72 124 C56 102, 66 76, 96 68 C126 60, 156 78, 160 104 C164 130, 146 146, 118 148 C94 150, 82 142, 72 124 Z"
-                fill="color-mix(in srgb, var(--text) 80%, #ffffff)" stroke="color-mix(in srgb, var(--shadow) 35%, transparent)" stroke-width="2"/>
+                fill="var(--text) 80%, #ffffff)" stroke="var(--shadow) 35%, transparent)" stroke-width="2"/>
           <!-- tail wrap -->
           <path d="M148 104 C170 104, 174 128, 150 136 C126 144, 118 134, 130 126" fill="none"
-                stroke="color-mix(in srgb, var(--shadow) 55%, transparent)" stroke-width="10" stroke-linecap="round"/>
+                stroke="var(--shadow) 55%, transparent)" stroke-width="10" stroke-linecap="round"/>
           <!-- head tucked -->
           <path d="M104 102 C98 88, 110 78, 124 80 C140 82, 146 96, 138 108 C130 120, 112 118, 104 102 Z"
-                fill="color-mix(in srgb, var(--text) 86%, #ffffff)"/>
+                fill="var(--text) 86%, #ffffff)"/>
           <path d="M110 98 Q118 104 126 98" stroke="#0a0a0a" stroke-width="3" stroke-linecap="round" fill="none"/>
           <path d="M112 110 Q118 114 124 110" stroke="#121212" stroke-width="2.5" stroke-linecap="round" fill="none"/>
           <!-- gray patch hint -->
           <path d="M114 84 C118 82, 126 86, 126 92 C120 94, 116 90, 114 84 Z"
-                fill="color-mix(in srgb, #b5b7bd 70%, var(--text))" opacity=".6"/>
+                fill="var(--text))" opacity=".6"/>
         </g>
       </svg>
     `,
