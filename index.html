@@ -12,24 +12,28 @@ html,body{
   background:#10291c;
   color:#e6ffe9;
 }
-#top{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 16px;letter-spacing:2px;
-}
-#gear{cursor:pointer}
 #scene{
   position:absolute;inset:0;
   background:
-    radial-gradient(circle at 70% 30%, #ffe8a3 0%, transparent 40%),
+    radial-gradient(circle at 70% 30%, #ffe8a3 0%, transparent 38%),
     linear-gradient(#1b3a2a,#0e2218);
 }
+#top{
+  position:relative;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 16px;letter-spacing:2px;
+  z-index:10;
+}
+#gear{cursor:pointer}
 #pal{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
+  transform:translateZ(0); /* CRITICAL SAFARI FIX */
 }
 .cat{
   width:180px;height:140px;
   position:relative;
+  will-change:transform;
 }
 .body{
   position:absolute;bottom:0;left:20px;
@@ -65,15 +69,15 @@ html,body{
   background:#f7f7f5;border-radius:20px;
 }
 .sleep .eye{height:2px;top:35px}
-.sleep .cat{opacity:.85}
 #bubble{
   position:absolute;bottom:220px;
   background:#1b3a2a;padding:10px 14px;
   border-radius:14px;display:none;
+  z-index:5;
 }
 #chat{
   position:fixed;bottom:16px;left:16px;right:16px;
-  display:flex;gap:10px;
+  display:flex;gap:10px;z-index:10;
 }
 input{
   flex:1;background:#143526;border:1px solid #3a7;
@@ -86,6 +90,7 @@ button{
 #settings{
   position:fixed;inset:0;background:rgba(0,0,0,.6);
   display:none;align-items:center;justify-content:center;
+  z-index:20;
 }
 .panel{
   background:#143526;padding:20px;border-radius:16px;
@@ -131,38 +136,42 @@ let sleepTimer;
 const cat=document.getElementById("cat");
 const bubble=document.getElementById("bubble");
 
-function sleep(){
-  cat.classList.add("sleep");
-}
-function wake(){
-  cat.classList.remove("sleep");
-}
+function sleep(){ cat.classList.add("sleep"); }
+function wake(){ cat.classList.remove("sleep"); }
+
 function resetIdle(){
   wake();
   clearTimeout(sleepTimer);
   sleepTimer=setTimeout(sleep,7000);
 }
+
 cat.addEventListener("click",()=>{
-  wake(); bubble.textContent="😽"; bubble.style.display="block";
+  wake();
+  bubble.textContent="😽";
+  bubble.style.display="block";
   setTimeout(()=>bubble.style.display="none",1200);
   resetIdle();
 });
+
 document.getElementById("send").onclick=send;
 document.getElementById("input").addEventListener("keydown",e=>{
   if(e.key==="Enter")send();
 });
+
 function send(){
   bubble.textContent="💬";
   bubble.style.display="block";
   setTimeout(()=>bubble.style.display="none",1200);
   resetIdle();
 }
+
 function closeSettings(){
   document.getElementById("settings").style.display="none";
 }
 document.getElementById("gear").onclick=()=>{
   document.getElementById("settings").style.display="flex";
 };
+
 resetIdle();
 </script>
 </body>
