@@ -1,15 +1,1 @@
-{
-  "name": "Gigglebits",
-  "short_name": "Gigglebits",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#08140e",
-  "theme_color": "#0f2b1b",
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ]
-}
+{"name": "Gigglebits", "short_name": "Gigglebits", "start_url": "./", "display": "standalone", "background_color": "#0b2b1a", "theme_color": "#0b2b1a", "icons": []}
