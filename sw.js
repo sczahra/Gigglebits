@@ -1,4 +1,4 @@
-const CACHE = "gigglebits-whitecat-roam-v2";
+const CACHE = "gigglebits-whitecat-roam-v3";
 const ASSETS = [
   "./",
   "./index.html",

@@ -339,3 +339,15 @@ a.dl{
   #bubble{ max-width: 74vw; }
   select{ width: 180px; }
 }
+
+#ver{
+  display:inline-block;
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  color: rgba(185,247,212,.9);
+  letter-spacing: .08em;
+  font-size: 12px;
+}

@@ -1,7 +1,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
-  const APP_BUILD = "roam-v2";
+  const APP_BUILD = "roam-v3";
   async function selfHealCaches(){
     // Clears only Gigglebits caches/service workers for THIS origin.
     if(!("serviceWorker" in navigator)) return;
@@ -100,13 +100,14 @@
     cat: $("#cat"),
     catSprite: $("#catSprite"),
     charWrap: $("#charWrap"),
+    stage: $("#stage"),
     input: $("#input"),
     send: $("#send")
   };
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v4");
+      const raw = localStorage.getItem("gigglebits.settings.v5");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -115,7 +116,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v4", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v5", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
@@ -238,14 +239,15 @@
     refreshUIFromSettings();
   }
 
+  
+  
   function interpret(text){
     const t = text.trim();
     if(!t) return {bubble:"", emoji:"", reason:"neutral"};
     const lower = t.toLowerCase();
-    const isQuestion = t.endsWith("?") || /\b(why|how|what|when|where|who)\b/.test(lower);
-    const happy = /(\blol\b|haha|yay|nice|cool|awesome|great|love|:)|
-                   \u2764|\u2728/.test(lower);
-    const sad = /(sad|ugh|tired|bad|hate|angry|mad|:\/|:\(|\uD83D\uDE2D)/.test(lower);
+    const isQuestion = t.endsWith("?") || /(why|how|what|when|where|who)/.test(lower);
+    const happy = /(lol|haha|yay|nice|cool|awesome|great|love)/.test(lower) || t.includes("❤️") || t.includes("✨") || t.includes(":)");
+    const sad = /(sad|ugh|tired|bad|hate|angry|mad)/.test(lower) || t.includes("😭") || t.includes(":(") || t.includes(":/");
 
     let emoji = "🙂";
     if(isQuestion) emoji = "❓";
@@ -262,6 +264,8 @@
     }
     return {bubble, emoji, reason: isQuestion ? "question" : happy ? "happy" : sad ? "sad" : "neutral"};
   }
+
+  function send(
 
   function send(){
     const txt = el.input.value;
@@ -401,6 +405,7 @@
   function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
 
   function stageBounds(){
+    if(!el.stage) return {minX:-120,maxX:120,minY:-80,maxY:80};
     const rect = el.stage.getBoundingClientRect();
     // Keep the cat comfortably on-screen
     const padX = Math.min(40, rect.width * 0.10);
