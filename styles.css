@@ -429,9 +429,6 @@ a.dl{
   will-change: opacity, transform;
 }
 
-/* crossfade */
-#catA{ opacity: 1; }
-#catB{ opacity: 0; }
 
 /* subtle pseudo-depth on container */
 #merrySprite.depth{

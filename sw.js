@@ -1,4 +1,4 @@
-const CACHE = "gigglebits-whitecat-sprite-v040";
+const CACHE = "gigglebits-whitecat-sprite-v041";
 const ASSETS = [
   "./",
   "./index.html",

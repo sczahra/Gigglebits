@@ -1,7 +1,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
-  const APP_BUILD = "sprite-v040";
+  const APP_BUILD = "sprite-v041";
   async function selfHealCaches(){
     // Clears only Gigglebits caches/service workers for THIS origin.
     if(!("serviceWorker" in navigator)) return;
@@ -70,27 +70,13 @@
   function setSpriteFrame(i){
     const clamped = ((i % SPRITES.length) + SPRITES.length) % SPRITES.length;
     const src = SPRITES[clamped];
-    // crossfade between A and B
-    const showA = sprite.lastSwapA;
-    const front = showA ? el.catA : el.catB;
-    const back  = showA ? el.catB : el.catA;
-    if(!front || !back) return;
-
-    back.src = src;
-    back.style.opacity = "0";
-    // trigger reflow
-    void back.offsetWidth;
-    back.style.transition = "opacity 220ms ease-in-out";
-    front.style.transition = "opacity 220ms ease-in-out";
-    back.style.opacity = "1";
-    front.style.opacity = "0";
-
-    sprite.lastSwapA = !sprite.lastSwapA;
+    if(!el.catFrame) return;
+    el.catFrame.src = src;
     sprite.idx = clamped;
   }
 
   function spriteTick(now){
-    if(!el.catA || !el.catB) return;
+    if(!el.catFrame) return;
 
     // tune pace by intensity
     const intensity = state.settings.intensity;
@@ -100,9 +86,9 @@
     if(state.mode === "active"){
       sprite.fps = base;
       // occasional behavior shift
-      if(Math.random() < 0.004) sprite.mode = "look";
-      if(Math.random() < 0.003) sprite.mode = "tail";
-      if(Math.random() < 0.010) sprite.mode = "idle";
+      if(Math.random() < 0.010) sprite.mode = "look";
+      if(Math.random() < 0.008) sprite.mode = "tail";
+      if(Math.random() < 0.018) sprite.mode = "idle";
     } else if(state.mode === "bored"){
       sprite.fps = Math.max(2, base-2);
       sprite.mode = "idle";
@@ -192,8 +178,7 @@
 
     bubble: $("#bubble"),
     bigEmoji: $("#bigEmoji"),
-    catA: $("#catA"),
-    catB: $("#catB"),
+    catFrame: $("#catFrame"),
     merrySprite: $("#merrySprite"),
     charWrap: $("#charWrap"),
     stage: $("#stage"),
@@ -203,7 +188,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v7");
+      const raw = localStorage.getItem("gigglebits.settings.v8");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -212,7 +197,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v7", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v8", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
