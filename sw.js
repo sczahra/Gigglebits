@@ -1,4 +1,4 @@
-const CACHE = "gigglebits-whitecat-roam-v3";
+const CACHE = "gigglebits-whitecat-sprite-v040";
 const ASSETS = [
   "./",
   "./index.html",
@@ -6,7 +6,19 @@ const ASSETS = [
   "./main.js",
   "./manifest.webmanifest",
   "./icon-512.png",
-  "./cat.png"
+  "./cat.png",
+  "./frames/merry_00.png",
+  "./frames/merry_01.png",
+  "./frames/merry_02.png",
+  "./frames/merry_03.png",
+  "./frames/merry_04.png",
+  "./frames/merry_05.png",
+  "./frames/merry_06.png",
+  "./frames/merry_07.png",
+  "./frames/merry_08.png",
+  "./frames/merry_09.png",
+  "./frames/merry_10.png",
+  "./frames/merry_11.png"
 ];
 
 self.addEventListener("install", (event) => {

@@ -1,7 +1,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
-  const APP_BUILD = "roam-v3";
+  const APP_BUILD = "sprite-v040";
   async function selfHealCaches(){
     // Clears only Gigglebits caches/service workers for THIS origin.
     if(!("serviceWorker" in navigator)) return;
@@ -45,6 +45,101 @@
     soft:    { bg0:"#1d2a32", bg1:"#0f151a", fg:"#d6f6ff", muted:"#9fd4e6", accent:"#63d1ff" },
     mono:    { bg0:"#101014", bg1:"#060608", fg:"#e8e8ee", muted:"#b7b7c2", accent:"#d0d0ff" }
   };
+
+
+  const SPRITES = ['./frames/merry_00.png', './frames/merry_01.png', './frames/merry_02.png', './frames/merry_03.png', './frames/merry_04.png', './frames/merry_05.png', './frames/merry_06.png', './frames/merry_07.png', './frames/merry_08.png', './frames/merry_09.png', './frames/merry_10.png', './frames/merry_11.png'];
+
+  // sprite state
+  const sprite = {
+    idx: 0,
+    nextAt: 0,
+    fps: 6,            // base flipbook rate
+    mode: "idle",      // idle | look | tail | sleep
+    dir: 1,            // 1 forward, -1 backward
+    lastSwapA: True,
+    yaw: 0
+  };
+
+  function preloadSprites(){
+    SPRITES.forEach(src => {
+      const i = new Image();
+      i.src = src;
+    });
+  }
+
+  function setSpriteFrame(i){
+    const clamped = ((i % SPRITES.length) + SPRITES.length) % SPRITES.length;
+    const src = SPRITES[clamped];
+    // crossfade between A and B
+    const showA = sprite.lastSwapA;
+    const front = showA ? el.catA : el.catB;
+    const back  = showA ? el.catB : el.catA;
+    if(!front || !back) return;
+
+    back.src = src;
+    back.style.opacity = "0";
+    // trigger reflow
+    void back.offsetWidth;
+    back.style.transition = "opacity 220ms ease-in-out";
+    front.style.transition = "opacity 220ms ease-in-out";
+    back.style.opacity = "1";
+    front.style.opacity = "0";
+
+    sprite.lastSwapA = !sprite.lastSwapA;
+    sprite.idx = clamped;
+  }
+
+  function spriteTick(now){
+    if(!el.catA || !el.catB) return;
+
+    // tune pace by intensity
+    const intensity = state.settings.intensity;
+    const base = intensity === "calm" ? 4 : intensity === "expressive" ? 9 : 6;
+
+    // choose behavior weights when active
+    if(state.mode === "active"){
+      sprite.fps = base;
+      // occasional behavior shift
+      if(Math.random() < 0.004) sprite.mode = "look";
+      if(Math.random() < 0.003) sprite.mode = "tail";
+      if(Math.random() < 0.010) sprite.mode = "idle";
+    } else if(state.mode === "bored"){
+      sprite.fps = Math.max(2, base-2);
+      sprite.mode = "idle";
+    } else {
+      sprite.fps = 2;
+      sprite.mode = "sleep";
+    }
+
+    // frame advance timing
+    const interval = 1000 / sprite.fps;
+    if(now < sprite.nextAt) return;
+    sprite.nextAt = now + interval;
+
+    // Avoid jump-cuts: step by 1 and reverse sometimes
+    if(sprite.mode === "look"){
+      // small sweep then stop
+      sprite.dir = Math.random() < 0.5 ? 1 : -1;
+      setSpriteFrame(sprite.idx + sprite.dir);
+      if(Math.random() < 0.22) sprite.mode = "idle";
+      return;
+    }
+    if(sprite.mode === "tail"){
+      // a few quick frames
+      sprite.dir = 1;
+      setSpriteFrame(sprite.idx + 1);
+      if(Math.random() < 0.35) sprite.mode = "idle";
+      return;
+    }
+    if(sprite.mode === "sleep"){
+      // very slow looping
+      setSpriteFrame(sprite.idx + (Math.random() < 0.35 ? 1 : 0));
+      return;
+    }
+    // idle
+    if(Math.random() < 0.03) sprite.dir *= -1;
+    setSpriteFrame(sprite.idx + sprite.dir);
+  }
 
   const BACKGROUNDS = {
     desk: () => ({
@@ -97,8 +192,9 @@
 
     bubble: $("#bubble"),
     bigEmoji: $("#bigEmoji"),
-    cat: $("#cat"),
-    catSprite: $("#catSprite"),
+    catA: $("#catA"),
+    catB: $("#catB"),
+    merrySprite: $("#merrySprite"),
     charWrap: $("#charWrap"),
     stage: $("#stage"),
     input: $("#input"),
@@ -107,7 +203,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v5");
+      const raw = localStorage.getItem("gigglebits.settings.v7");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -116,7 +212,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v5", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v7", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
@@ -166,14 +262,7 @@
   }
 
   function applyIntensity(){
-    el.cat.classList.remove("alive","sway");
-    if(state.settings.intensity === "calm"){
-      el.cat.classList.add("alive");
-    }else if(state.settings.intensity === "expressive"){
-      el.cat.classList.add("sway");
-    }else{
-      el.cat.classList.add("alive");
-    }
+    // sprite engine handles motion; keep this hook for future tuning
   }
 
   function refreshUIFromSettings(){
@@ -209,21 +298,21 @@
     if(state.mode === mode) return;
     state.mode = mode;
     if(mode === "sleeping"){
-      el.cat.classList.add("sleeping");
+      if(el.merrySprite) el.merrySprite.classList.add("sleeping");
       if(el.catSprite) el.catSprite.classList.add("curl");
       showEmoji("💤");
       if(state.settings.bubbles && state.settings.verbosity !== "silent"){
         showBubble("zzz…");
       }
     }else if(mode === "bored"){
-      el.cat.classList.remove("sleeping");
+      if(el.merrySprite) el.merrySprite.classList.remove("sleeping");
       if(el.catSprite) el.catSprite.classList.remove("curl");
       if(state.settings.emojis) showEmoji("…");
       if(state.settings.bubbles && state.settings.verbosity !== "silent"){
         showBubble("…");
       }
     }else{
-      el.cat.classList.remove("sleeping");
+      if(el.merrySprite) el.merrySprite.classList.remove("sleeping");
       if(el.catSprite) el.catSprite.classList.remove("curl");
       hideEmoji();
       hideBubble();
@@ -438,6 +527,10 @@
     roam.dir = newDir;
     if(el.catSprite){
       el.catSprite.classList.toggle("flip", roam.dir === -1);
+      const yaw = roam.dir === -1 ? "-6deg" : "6deg";
+      el.catSprite.style.setProperty("--yaw", yaw);
+      el.catSprite.style.setProperty("--pitch", "1.2deg");
+      el.catSprite.style.setProperty("--shineX", roam.dir === -1 ? "58%" : "36%");
     }
     setRoamTarget(x, y);
   }
@@ -451,18 +544,23 @@
     setTimeout(()=>el.catSprite && el.catSprite.classList.remove("wiggle"), 950);
   }
 
+  
   function lookAround(){
     if(!el.catSprite) return;
-    // tiny "turn head" illusion: quick flip and back sometimes
-    const r = Math.random();
-    if(r < 0.45){
-      doWiggle(); // reads like tail/interest
-      return;
-    }
-    const wasFlip = el.catSprite.classList.contains("flip");
-    el.catSprite.classList.toggle("flip", !wasFlip);
-    setTimeout(()=> el.catSprite && el.catSprite.classList.toggle("flip", wasFlip), 520);
+    doWiggle();
+    const base = roam.dir === -1 ? -4 : 4;
+    const peek = (Math.random() < 0.5 ? -1 : 1) * (6 + Math.random()*4);
+    el.catSprite.style.setProperty("--yaw", `${base + peek}deg`);
+    el.catSprite.style.setProperty("--pitch", `${(Math.random()*2 - 1.0).toFixed(2)}deg`);
+    el.catSprite.style.setProperty("--shineX", `${peek > 0 ? 36 : 60}%`);
+    el.catSprite.style.setProperty("--shineY", `${22 + Math.random()*12}%`);
+    setTimeout(() => {
+      if(!el.catSprite) return;
+      el.catSprite.style.setProperty("--yaw", `${base}deg`);
+      el.catSprite.style.setProperty("--pitch", "1deg");
+    }, 650);
   }
+
 
   function roamTick(now){
     if(state.settings.movement !== "roam") return;
@@ -494,6 +592,7 @@
   function tick(){
     const now = Date.now();
     roamTick(now);
+    spriteTick(now);
     if(now < state.wakeLockedUntil) return;
     const idle = now - state.lastInteraction;
     if(state.settings.sleepEnabled){
