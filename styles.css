@@ -119,8 +119,11 @@ button:active{ transform: translateY(1px); }
   width: min(330px, 70vw);
   max-width: 420px;
   height: auto;
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,.55));
   border-radius: 18px;
+}
+
+#charWrap{
+  filter: drop-shadow(0 18px 26px rgba(0,0,0,.55));
 }
 
 /* Alive motion */
