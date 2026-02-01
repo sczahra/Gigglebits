@@ -92,11 +92,14 @@ button:active{ transform: translateY(1px); }
 }
 
 #charWrap{
+  --x: 0px;
+  --y: 0px;
   position:absolute;
   left: 50%;
   top: 48%;
-  transform: translate(-50%,-50%) scale(var(--charScale));
+  transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--charScale));
   transform-origin:center;
+  transition: transform 3.8s ease-in-out;
   display:flex;
   align-items:flex-end;
   gap: 14px;
@@ -104,11 +107,13 @@ button:active{ transform: translateY(1px); }
 }
 
 #charWrap.docked{
+  --x: 0px;
+  --y: 0px;
   left:auto;
   top:auto;
   right: 18px;
   bottom: 92px;
-  transform: translate(0,0) scale(var(--charScale));
+  transform: translate(var(--x), var(--y)) scale(var(--charScale));
 }
 
 #charWrap.large{
@@ -122,8 +127,44 @@ button:active{ transform: translateY(1px); }
   border-radius: 18px;
 }
 
+#catSprite{
+  transform-origin: 55% 70%;
+  will-change: transform;
+}
+
+#catSprite.flip{
+  transform: scaleX(-1);
+}
+
+@keyframes wiggle {
+  0%{ transform: rotate(0deg); }
+  25%{ transform: rotate(1.2deg); }
+  50%{ transform: rotate(0deg); }
+  75%{ transform: rotate(-1.1deg); }
+  100%{ transform: rotate(0deg); }
+}
+#catSprite.wiggle{
+  animation: wiggle 0.9s ease-in-out 1;
+}
+
+#catSprite.curl{
+  transform: rotate(-8deg) scale(0.92);
+  opacity: 0.98;
+}
+
 #charWrap{
-  filter: drop-shadow(0 18px 26px rgba(0,0,0,.55));
+  --x: 0px;
+  --y: 0px;
+  position:absolute;
+  left: 50%;
+  top: 48%;
+  transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(var(--charScale));
+  transform-origin:center;
+  transition: transform 3.8s ease-in-out;
+  display:flex;
+  align-items:flex-end;
+  gap: 14px;
+  user-select:none;
 }
 
 /* Alive motion */

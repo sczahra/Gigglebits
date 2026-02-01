@@ -12,7 +12,8 @@
     bubbles: true,
     emojis: true,
     verbosity: "short", // minimal | short | silent
-    vhs: true
+    vhs: true,
+    movement: "roam" // roam | static
   };
 
   const PALETTES = {
@@ -58,6 +59,7 @@
     palette: $("#palette"),
     background: $("#background"),
     bgMode: $("#bgMode"),
+    movement: $("#movement"),
     charSize: $("#charSize"),
     intensity: $("#intensity"),
     sleepEnabled: $("#sleepEnabled"),
@@ -73,6 +75,7 @@
     bubble: $("#bubble"),
     bigEmoji: $("#bigEmoji"),
     cat: $("#cat"),
+    catSprite: $("#catSprite"),
     charWrap: $("#charWrap"),
     input: $("#input"),
     send: $("#send")
@@ -80,7 +83,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v2");
+      const raw = localStorage.getItem("gigglebits.settings.v3");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -89,7 +92,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v2", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v3", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
@@ -153,6 +156,7 @@
     el.palette.value = state.settings.palette;
     el.background.value = state.settings.background;
     el.bgMode.value = state.settings.bgMode;
+    if(el.movement) el.movement.value = state.settings.movement || "roam";
     el.charSize.value = state.settings.charSize;
     el.intensity.value = state.settings.intensity;
     el.sleepEnabled.checked = !!state.settings.sleepEnabled;
@@ -182,18 +186,21 @@
     state.mode = mode;
     if(mode === "sleeping"){
       el.cat.classList.add("sleeping");
+      if(el.catSprite) el.catSprite.classList.add("curl");
       showEmoji("💤");
       if(state.settings.bubbles && state.settings.verbosity !== "silent"){
         showBubble("zzz…");
       }
     }else if(mode === "bored"){
       el.cat.classList.remove("sleeping");
+      if(el.catSprite) el.catSprite.classList.remove("curl");
       if(state.settings.emojis) showEmoji("…");
       if(state.settings.bubbles && state.settings.verbosity !== "silent"){
         showBubble("…");
       }
     }else{
       el.cat.classList.remove("sleeping");
+      if(el.catSprite) el.catSprite.classList.remove("curl");
       hideEmoji();
       hideBubble();
     }
@@ -260,6 +267,7 @@
         randomizeBackground();
       }
       if(state.settings.emojis) showEmoji("😺");
+      doWiggle();
       if(state.settings.bubbles && state.settings.verbosity !== "silent"){
         showBubble(state.settings.verbosity === "minimal" ? "hi" : "hey.");
       }
@@ -285,6 +293,7 @@
     bind(el.palette, "palette");
     bind(el.background, "background");
     bind(el.bgMode, "bgMode");
+    if(el.movement) bind(el.movement, "movement");
     bind(el.charSize, "charSize");
     bind(el.intensity, "intensity");
     bind(el.sleepEnabled, "sleepEnabled", v => !!v);
@@ -357,6 +366,95 @@
     el.charWrap.addEventListener("pointerdown", nudgeLife);
   }
 
+
+  let roam = {
+    nextMoveAt: 0,
+    nextLookAt: 0,
+    targetX: 0,
+    targetY: 0,
+    dir: 1 // 1 right, -1 left
+  };
+
+  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
+
+  function stageBounds(){
+    const rect = el.stage.getBoundingClientRect();
+    // Keep the cat comfortably on-screen
+    const padX = Math.min(40, rect.width * 0.10);
+    const padTop = Math.min(70, rect.height * 0.12);
+    const padBottom = Math.min(120, rect.height * 0.18);
+    return {
+      minX: -rect.width/2 + padX,
+      maxX:  rect.width/2 - padX,
+      minY: -rect.height/2 + padTop,
+      maxY:  rect.height/2 - padBottom
+    };
+  }
+
+  function setRoamTarget(x, y){
+    roam.targetX = x;
+    roam.targetY = y;
+    // Apply offsets to charWrap via CSS vars
+    el.charWrap.style.setProperty("--x", `${Math.round(x)}px`);
+    el.charWrap.style.setProperty("--y", `${Math.round(y)}px`);
+  }
+
+  function chooseNewRoamTarget(){
+    const b = stageBounds();
+    // Roam range depends on size (small stays put)
+    if(state.settings.charSize === "small") return;
+    const x = b.minX + Math.random() * (b.maxX - b.minX);
+    const y = b.minY + Math.random() * (b.maxY - b.minY);
+    // Direction + flip
+    const newDir = (x >= roam.targetX) ? 1 : -1;
+    roam.dir = newDir;
+    if(el.catSprite){
+      el.catSprite.classList.toggle("flip", roam.dir === -1);
+    }
+    setRoamTarget(x, y);
+  }
+
+  function doWiggle(){
+    if(!el.catSprite) return;
+    el.catSprite.classList.remove("wiggle");
+    // retrigger
+    void el.catSprite.offsetWidth;
+    el.catSprite.classList.add("wiggle");
+    setTimeout(()=>el.catSprite && el.catSprite.classList.remove("wiggle"), 950);
+  }
+
+  function lookAround(){
+    if(!el.catSprite) return;
+    // tiny "turn head" illusion: quick flip and back sometimes
+    const r = Math.random();
+    if(r < 0.45){
+      doWiggle(); // reads like tail/interest
+      return;
+    }
+    const wasFlip = el.catSprite.classList.contains("flip");
+    el.catSprite.classList.toggle("flip", !wasFlip);
+    setTimeout(()=> el.catSprite && el.catSprite.classList.toggle("flip", wasFlip), 520);
+  }
+
+  function roamTick(now){
+    if(state.settings.movement !== "roam") return;
+    if(state.mode !== "active") return;
+    if(state.settings.charSize === "small") return;
+
+    // Movement pacing depends on intensity
+    const baseMove = state.settings.intensity === "calm" ? 9500 : state.settings.intensity === "expressive" ? 5200 : 7200;
+    const baseLook = state.settings.intensity === "calm" ? 7000 : state.settings.intensity === "expressive" ? 3800 : 5200;
+
+    if(now > roam.nextMoveAt){
+      chooseNewRoamTarget();
+      roam.nextMoveAt = now + baseMove + Math.random()*baseMove*0.55;
+    }
+    if(now > roam.nextLookAt){
+      lookAround();
+      roam.nextLookAt = now + baseLook + Math.random()*baseLook*0.6;
+    }
+  }
+
   function applyAll(){
     applyPalette();
     applyBackground();
@@ -367,6 +465,7 @@
 
   function tick(){
     const now = Date.now();
+    roamTick(now);
     if(now < state.wakeLockedUntil) return;
     const idle = now - state.lastInteraction;
     if(state.settings.sleepEnabled){

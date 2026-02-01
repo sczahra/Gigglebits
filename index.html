@@ -24,7 +24,7 @@
       <div id="scanlines"></div>
 
       <div id="charWrap" aria-label="Cat">
-        <div>
+        <div id="catSprite" aria-hidden="true">
           <img id="cat" class="alive" src="cat.png" alt="White cat with heterochromia" />
         </div>
         <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
@@ -80,6 +80,13 @@
               <select id="bgMode">
                 <option value="fixed">Fixed</option>
                 <option value="random">Random on wake</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="movement">Movement</label>
+              <select id="movement">
+                <option value="roam">Roam (subtle)</option>
+                <option value="static">Static</option>
               </select>
             </div>
             <div class="smallNote">You can add more backgrounds later without changing the app logic.</div>
