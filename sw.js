@@ -1,6 +1,43 @@
-self.addEventListener('install',e=>{
- e.waitUntil(caches.open('gb-v5').then(c=>c.addAll(['./'])))
+const CACHE = "gigglebits-whitecat-v4";
+const ASSETS = [
+  "./",
+  "./index.html",
+  "./styles.css",
+  "./main.js",
+  "./manifest.webmanifest",
+  "./icon-512.png",
+  "./cat.png"
+];
+
+self.addEventListener("install", (event) => {
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    await cache.addAll(ASSETS);
+    self.skipWaiting();
+  })());
 });
-self.addEventListener('fetch',e=>{
- e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)))
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => (k === CACHE) ? null : caches.delete(k)));
+    self.clients.claim();
+  })());
+});
+
+self.addEventListener("fetch", (event) => {
+  const req = event.request;
+  if (req.method !== "GET") return;
+  event.respondWith((async () => {
+    const cached = await caches.match(req, {ignoreSearch:true});
+    if (cached) return cached;
+    try{
+      const fresh = await fetch(req);
+      const cache = await caches.open(CACHE);
+      cache.put(req, fresh.clone());
+      return fresh;
+    }catch{
+      return caches.match("./index.html");
+    }
+  })());
 });

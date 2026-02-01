@@ -1,178 +1,156 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Gigglebits</title>
-<link rel="manifest" href="manifest.webmanifest">
-<style>
-html,body{
-  margin:0;height:100%;
-  font-family:-apple-system,BlinkMacSystemFont,system-ui,sans-serif;
-  background:#10291c;
-  color:#e6ffe9;
-}
-#scene{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(circle at 70% 30%, #ffe8a3 0%, transparent 38%),
-    linear-gradient(#1b3a2a,#0e2218);
-}
-#top{
-  position:relative;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:14px 16px;letter-spacing:2px;
-  z-index:10;
-}
-#gear{cursor:pointer}
-#pal{
-  position:absolute;inset:0;
-  display:flex;align-items:center;justify-content:center;
-  transform:translateZ(0); /* CRITICAL SAFARI FIX */
-}
-.cat{
-  width:180px;height:140px;
-  position:relative;
-  will-change:transform;
-}
-.body{
-  position:absolute;bottom:0;left:20px;
-  width:140px;height:80px;
-  background:#f7f7f5;
-  border-radius:60px;
-}
-.head{
-  position:absolute;top:0;left:60px;
-  width:80px;height:70px;
-  background:#f7f7f5;
-  border-radius:50%;
-}
-.ear{
-  position:absolute;top:-10px;width:20px;height:30px;
-  background:#f7f7f5;border-radius:50% 50% 0 0;
-}
-.ear.left{left:65px}
-.ear.right{left:115px}
-.patch{
-  position:absolute;top:5px;left:95px;
-  width:20px;height:18px;
-  background:#ccc;border-radius:50%;
-}
-.eye{
-  position:absolute;top:30px;width:10px;height:10px;border-radius:50%;
-}
-.eye.blue{left:80px;background:#6bbcff}
-.eye.green{left:105px;background:#6bff9e}
-.tail{
-  position:absolute;left:0;bottom:20px;
-  width:60px;height:20px;
-  background:#f7f7f5;border-radius:20px;
-}
-.sleep .eye{height:2px;top:35px}
-#bubble{
-  position:absolute;bottom:220px;
-  background:#1b3a2a;padding:10px 14px;
-  border-radius:14px;display:none;
-  z-index:5;
-}
-#chat{
-  position:fixed;bottom:16px;left:16px;right:16px;
-  display:flex;gap:10px;z-index:10;
-}
-input{
-  flex:1;background:#143526;border:1px solid #3a7;
-  border-radius:12px;padding:12px;color:#e6ffe9;
-}
-button{
-  background:#4cff9e;border:none;border-radius:50%;
-  width:44px;height:44px;
-}
-#settings{
-  position:fixed;inset:0;background:rgba(0,0,0,.6);
-  display:none;align-items:center;justify-content:center;
-  z-index:20;
-}
-.panel{
-  background:#143526;padding:20px;border-radius:16px;
-}
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#063f2b" />
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icon-512.png" />
+  <link rel="apple-touch-icon" href="icon-512.png" />
+  <title>Gigglebits</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div id="scene"></div>
+  <div id="app">
+    <header>
+      <div class="brand">
+        <div class="title">GIGGLEBITS</div>
+        <div class="sub">offline pal</div>
+      </div>
+      <button id="settingsBtn" aria-label="Open settings">⚙︎ Settings</button>
+    </header>
 
-<div id="top">
-  <div><strong>GIGGLEBITS</strong> <small>offline pal</small></div>
-  <div id="gear">⚙️</div>
-</div>
+    <main id="stage" aria-label="Stage">
+      <div id="scanlines"></div>
 
-<div id="pal">
-  <div id="bubble">😺</div>
-  <div class="cat" id="cat">
-    <div class="tail"></div>
-    <div class="body"></div>
-    <div class="head"></div>
-    <div class="ear left"></div>
-    <div class="ear right"></div>
-    <div class="patch"></div>
-    <div class="eye blue"></div>
-    <div class="eye green"></div>
+      <div id="charWrap" aria-label="Cat">
+        <div>
+          <img id="cat" class="alive" src="cat.png" alt="White cat with heterochromia" />
+        </div>
+        <div style="display:flex; flex-direction:column; gap:10px; align-items:flex-start;">
+          <div id="bubble" aria-live="polite"></div>
+          <div id="bigEmoji" aria-hidden="true"></div>
+        </div>
+      </div>
+
+      <div id="modalBackdrop" aria-hidden="true">
+        <div id="modal" role="dialog" aria-modal="true" aria-label="Settings">
+          <div class="modalHeader">
+            <h2>Settings</h2>
+            <button id="modalClose" aria-label="Close settings">✕</button>
+          </div>
+
+          <div class="section">
+            <h3>Appearance</h3>
+            <div class="row">
+              <label for="palette">Color palette</label>
+              <select id="palette">
+                <option value="vault">Vault Green</option>
+                <option value="amber">Amber CRT</option>
+                <option value="soft">Soft Blue</option>
+                <option value="mono">Mono Noir</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="vhs">VHS overlay</label>
+              <input id="vhs" type="checkbox" />
+            </div>
+            <div class="row">
+              <label for="charSize">Character size</label>
+              <select id="charSize">
+                <option value="small">Small (docked)</option>
+                <option value="medium">Medium</option>
+                <option value="large">Large (main focus)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Environment</h3>
+            <div class="row">
+              <label for="background">Background</label>
+              <select id="background">
+                <option value="desk">Desk / Terminal</option>
+                <option value="cozy">Cozy Room</option>
+                <option value="minimal">Minimal</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="bgMode">Background mode</label>
+              <select id="bgMode">
+                <option value="fixed">Fixed</option>
+                <option value="random">Random on wake</option>
+              </select>
+            </div>
+            <div class="smallNote">You can add more backgrounds later without changing the app logic.</div>
+          </div>
+
+          <div class="section">
+            <h3>Behavior</h3>
+            <div class="row">
+              <label for="intensity">Personality intensity</label>
+              <select id="intensity">
+                <option value="calm">Calm</option>
+                <option value="balanced">Balanced</option>
+                <option value="expressive">Expressive</option>
+              </select>
+            </div>
+            <div class="row">
+              <label for="sleepEnabled">Sleep enabled</label>
+              <input id="sleepEnabled" type="checkbox" />
+            </div>
+            <div class="row">
+              <label for="sleepDelay">Sleep delay</label>
+              <select id="sleepDelay">
+                <option value="short">Short</option>
+                <option value="medium">Medium</option>
+                <option value="long">Long</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>Communication</h3>
+            <div class="row">
+              <label for="bubbles">Speech bubbles</label>
+              <input id="bubbles" type="checkbox" />
+            </div>
+            <div class="row">
+              <label for="emojis">Emoji reactions</label>
+              <input id="emojis" type="checkbox" />
+            </div>
+            <div class="row">
+              <label for="verbosity">Text verbosity</label>
+              <select id="verbosity">
+                <option value="minimal">Minimal</option>
+                <option value="short">Short</option>
+                <option value="silent">Silent (emoji only)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="section">
+            <h3>System</h3>
+            <div class="fileRow">
+              <a class="dl" href="javascript:void(0)" id="exportBtn">⬇︎ Export settings</a>
+              <label class="dl" style="cursor:pointer;">
+                ⬆︎ Import settings
+                <input class="hidden" id="importFile" type="file" accept="application/json" />
+              </label>
+              <a class="dl" href="javascript:void(0)" id="resetBtn">↺ Reset</a>
+            </div>
+            <div class="smallNote">Offline-first. Settings are stored on this device.</div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer id="composer" aria-label="Composer">
+      <input id="input" type="text" autocomplete="off" autocapitalize="sentences" placeholder="Type something…" />
+      <button id="send" aria-label="Send">➤</button>
+    </footer>
   </div>
-</div>
 
-<div id="chat">
-  <input id="input" placeholder="Type something…"/>
-  <button id="send">▶</button>
-</div>
-
-<div id="settings">
-  <div class="panel">
-    <p><strong>Settings</strong></p>
-    <button onclick="closeSettings()">Close</button>
-  </div>
-</div>
-
-<script>
-let sleepTimer;
-const cat=document.getElementById("cat");
-const bubble=document.getElementById("bubble");
-
-function sleep(){ cat.classList.add("sleep"); }
-function wake(){ cat.classList.remove("sleep"); }
-
-function resetIdle(){
-  wake();
-  clearTimeout(sleepTimer);
-  sleepTimer=setTimeout(sleep,7000);
-}
-
-cat.addEventListener("click",()=>{
-  wake();
-  bubble.textContent="😽";
-  bubble.style.display="block";
-  setTimeout(()=>bubble.style.display="none",1200);
-  resetIdle();
-});
-
-document.getElementById("send").onclick=send;
-document.getElementById("input").addEventListener("keydown",e=>{
-  if(e.key==="Enter")send();
-});
-
-function send(){
-  bubble.textContent="💬";
-  bubble.style.display="block";
-  setTimeout(()=>bubble.style.display="none",1200);
-  resetIdle();
-}
-
-function closeSettings(){
-  document.getElementById("settings").style.display="none";
-}
-document.getElementById("gear").onclick=()=>{
-  document.getElementById("settings").style.display="flex";
-};
-
-resetIdle();
-</script>
+  <script src="main.js"></script>
 </body>
 </html>
