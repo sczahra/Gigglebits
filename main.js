@@ -1,6 +1,29 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
+  const APP_BUILD = "roam-v2";
+  async function selfHealCaches(){
+    // Clears only Gigglebits caches/service workers for THIS origin.
+    if(!("serviceWorker" in navigator)) return;
+    try{
+      const regs = await navigator.serviceWorker.getRegistrations();
+      // If an old service worker is controlling this page, refresh after cleanup
+      const hadController = !!navigator.serviceWorker.controller;
+      await Promise.all(regs.map(r => r.unregister()));
+      if("caches" in window){
+        const keys = await caches.keys();
+        await Promise.all(keys.filter(k => k.startsWith("gigglebits-")).map(k => caches.delete(k)));
+      }
+      // Prevent reload loops
+      if(hadController && sessionStorage.getItem("gb.didHeal") !== "1"){
+        sessionStorage.setItem("gb.didHeal","1");
+        location.reload();
+      }
+    }catch{
+      // ignore
+    }
+  }
+
   const DEFAULTS = {
     palette: "vault",
     background: "desk",
@@ -83,7 +106,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v3");
+      const raw = localStorage.getItem("gigglebits.settings.v4");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -92,7 +115,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v3", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v4", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
@@ -483,7 +506,10 @@
 
   async function registerSW(){
     if(!("serviceWorker" in navigator)) return;
-    try{ await navigator.serviceWorker.register("./sw.js", {scope:"./"}); }catch{}
+    await selfHealCaches();
+    try{
+      await navigator.serviceWorker.register(`./sw.js?build=${APP_BUILD}`, {scope:"./"});
+    }catch{}
   }
 
   refreshUIFromSettings();

@@ -1,4 +1,4 @@
-const CACHE = "gigglebits-whitecat-roam-v1";
+const CACHE = "gigglebits-whitecat-roam-v2";
 const ASSETS = [
   "./",
   "./index.html",
@@ -29,7 +29,7 @@ self.addEventListener("fetch", (event) => {
   const req = event.request;
   if (req.method !== "GET") return;
   event.respondWith((async () => {
-    const cached = await caches.match(req, {ignoreSearch:true});
+    const cached = await caches.match(req, {});
     if (cached) return cached;
     try{
       const fresh = await fetch(req);
