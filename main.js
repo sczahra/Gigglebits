@@ -1,7 +1,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
-  const APP_BUILD = "sprite-v041";
+  const APP_BUILD = "sprite-v050-clean";
   async function selfHealCaches(){
     // Clears only Gigglebits caches/service workers for THIS origin.
     if(!("serviceWorker" in navigator)) return;
@@ -47,7 +47,32 @@
   };
 
 
-  const SPRITES = ['./frames/merry_00.png', './frames/merry_01.png', './frames/merry_02.png', './frames/merry_03.png', './frames/merry_04.png', './frames/merry_05.png', './frames/merry_06.png', './frames/merry_07.png', './frames/merry_08.png', './frames/merry_09.png', './frames/merry_10.png', './frames/merry_11.png'];
+  const SPRITES = [
+  "./frames/merry_00.png",
+  "./frames/merry_01.png",
+  "./frames/merry_02.png",
+  "./frames/merry_03.png",
+  "./frames/merry_04.png",
+  "./frames/merry_05.png",
+  "./frames/merry_06.png",
+  "./frames/merry_07.png",
+  "./frames/merry_08.png",
+  "./frames/merry_09.png",
+  "./frames/merry_10.png",
+  "./frames/merry_11.png",
+  "./frames/merry_12.png",
+  "./frames/merry_13.png",
+  "./frames/merry_14.png",
+  "./frames/merry_15.png",
+  "./frames/merry_16.png",
+  "./frames/merry_17.png",
+  "./frames/merry_18.png",
+  "./frames/merry_19.png",
+  "./frames/merry_20.png",
+  "./frames/merry_21.png",
+  "./frames/merry_22.png",
+  "./frames/merry_23.png"
+];
 
   // sprite state
   const sprite = {
@@ -188,7 +213,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v8");
+      const raw = localStorage.getItem("gigglebits.settings.v9");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -197,7 +222,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v8", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v9", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
