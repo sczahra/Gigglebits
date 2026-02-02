@@ -15,7 +15,7 @@
     <header>
       <div class="brand">
         <div class="title">GIGGLEBITS</div>
-        <div class="sub">offline pal <span id="ver" data-version="0.5.0">v0.5.0</span></div>
+        <div class="sub">offline pal <span id="ver" data-version="0.5.1">v0.5.1</span></div>
       </div>
       <button id="settingsBtn" aria-label="Open settings">⚙︎ Settings</button>
     </header>
@@ -26,7 +26,7 @@
       <div id="charWrap" aria-label="Cat">
         <div id="catSprite" aria-hidden="true">
           <div id="merrySprite" aria-hidden="true">
-  <img id="catFrame" class="catFrame" src="./frames/merry_00.png" alt="Merry the white cat" />
+  <div id="catFrame" class="catFrame" role="img" aria-label="Merry the white cat"></div>
   <div id="merryShadow" aria-hidden="true"></div>
 </div>
         </div>
@@ -162,5 +162,6 @@
   </div>
 
   <script src="main.js"></script>
+<button id="btnResetCache" style="display:none" type="button">Refresh app cache</button>
 </body>
 </html>

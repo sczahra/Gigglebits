@@ -1,7 +1,7 @@
 (() => {
   const $ = (s) => document.querySelector(s);
 
-  const APP_BUILD = "sprite-v050-clean";
+  const APP_BUILD = "sprite-v051-sheet";
   async function selfHealCaches(){
     // Clears only Gigglebits caches/service workers for THIS origin.
     if(!("serviceWorker" in navigator)) return;
@@ -47,32 +47,14 @@
   };
 
 
-  const SPRITES = [
-  "./frames/merry_00.png",
-  "./frames/merry_01.png",
-  "./frames/merry_02.png",
-  "./frames/merry_03.png",
-  "./frames/merry_04.png",
-  "./frames/merry_05.png",
-  "./frames/merry_06.png",
-  "./frames/merry_07.png",
-  "./frames/merry_08.png",
-  "./frames/merry_09.png",
-  "./frames/merry_10.png",
-  "./frames/merry_11.png",
-  "./frames/merry_12.png",
-  "./frames/merry_13.png",
-  "./frames/merry_14.png",
-  "./frames/merry_15.png",
-  "./frames/merry_16.png",
-  "./frames/merry_17.png",
-  "./frames/merry_18.png",
-  "./frames/merry_19.png",
-  "./frames/merry_20.png",
-  "./frames/merry_21.png",
-  "./frames/merry_22.png",
-  "./frames/merry_23.png"
-];
+  const SPRITESHEET = {
+    src: "./merry_sheet.png",
+    frameW: 1792,
+    frameH: 2304,
+    cols: 6,
+    rows: 4,
+    count: 24
+  };
 
   // sprite state
   const sprite = {
@@ -86,17 +68,28 @@
   };
 
   function preloadSprites(){
-    SPRITES.forEach(src => {
-      const i = new Image();
-      i.src = src;
-    });
+    const i = new Image();
+    i.src = SPRITESHEET.src;
+  });
   }
 
   function setSpriteFrame(i){
-    const clamped = ((i % SPRITES.length) + SPRITES.length) % SPRITES.length;
-    const src = SPRITES[clamped];
+    const count = SPRITESHEET.count;
+    const clamped = ((i % count) + count) % count;
     if(!el.catFrame) return;
-    el.catFrame.src = src;
+
+    // ensure background image set (some browsers drop it after reloads)
+    el.catFrame.style.backgroundImage = `url("${SPRITESHEET.src}")`;
+
+    const col = clamped % SPRITESHEET.cols;
+    const row = Math.floor(clamped / SPRITESHEET.cols);
+    const x = -col * SPRITESHEET.frameW;
+    const y = -row * SPRITESHEET.frameH;
+
+    el.catFrame.style.backgroundPosition = `${x}px ${y}px`;
+    // keep size in sync
+    el.catFrame.style.backgroundSize = `${SPRITESHEET.frameW*SPRITESHEET.cols}px ${SPRITESHEET.frameH*SPRITESHEET.rows}px`;
+
     sprite.idx = clamped;
   }
 
@@ -213,7 +206,7 @@
 
   function loadSettings(){
     try{
-      const raw = localStorage.getItem("gigglebits.settings.v9");
+      const raw = localStorage.getItem("gigglebits.settings.v10");
       if(!raw) return {...DEFAULTS};
       const parsed = JSON.parse(raw);
       return {...DEFAULTS, ...parsed};
@@ -222,7 +215,7 @@
     }
   }
   function saveSettings(){
-    localStorage.setItem("gigglebits.settings.v9", JSON.stringify(state.settings));
+    localStorage.setItem("gigglebits.settings.v10", JSON.stringify(state.settings));
   }
 
   function hexToRgba(hex, a){
